@@ -7,7 +7,7 @@ import cors from "cors";
 import userRoutes from "./Route/UserRoutes.js";
 
 const app = express();
-const port = 3000;
+const port = 3000 || process.env.PORT;
 dotenv.config();
 
 mongoose.connect(process.env.MONGO_URL, {
@@ -18,7 +18,7 @@ mongoose.connect(process.env.MONGO_URL, {
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["https://car-wash-dusky.vercel.app/", "http://localhost:5173"],
   })
 );
 
