@@ -18,7 +18,7 @@ mongoose.connect(process.env.MONGO_URL, {
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://car-wash-dusky.vercel.app/",
+    origin: "https://car-wash-dusky.vercel.app",
     credentials: true,
   })
 );
