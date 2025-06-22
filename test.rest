@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
 
-    "name": "Bhargab",
-    "email": "bhargab@gmail.com",
+    "name": "Admin",
+    "email": "admin@gmail.com",
     "password": "123456"
 }

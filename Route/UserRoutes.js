@@ -29,6 +29,6 @@ router.get(
   isAdmin,
   GetAllUsersController
 );
-router.put("/update-user/:id", UpdateUserController);
+router.put("/update-user/:id", authMiddleware, isAdmin, UpdateUserController);
 
 export default router;
