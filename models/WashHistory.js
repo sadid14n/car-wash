@@ -42,8 +42,8 @@ const washHistorySchema = mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["Completed", "Pending", "Cancelled"],
-      default: "Completed",
+      enum: ["Active", "Done"],
+      default: "Active",
     },
     isFreeWash: {
       type: Boolean,
