@@ -162,3 +162,84 @@ export const getWashHistoryByIdController = async (req, res) => {
     });
   }
 };
+
+// Get Wash History for month which is completed
+export const getWashHistoryForMonth = async (req, res) => {
+  try {
+    const totalWash = await WashHistory.countDocuments({
+      createdAt: {
+        $gte: new Date(new Date().setDate(new Date().getDate() - 30)),
+        $lt: new Date(),
+      },
+      status: "Done",
+    });
+
+    res.status(200).send({
+      success: true,
+      message: "Wash history for the month fetched successfully",
+      totalWash,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Today current wash which is active
+export const todayCurrentWash = async (req, res) => {
+  try {
+    const todayCurrentWash = await WashHistory.find({
+      createdAt: {
+        $gte: new Date(new Date().setDate(new Date().getDate())),
+        $lt: new Date(),
+      },
+      status: "Active",
+    }).populate("user", "name email");
+
+    const totalWash = todayCurrentWash.length;
+
+    res.status(200).send({
+      success: true,
+      message: "Current wash fetched successfully",
+      totalWash,
+      todayCurrentWash,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Today completed wash which is Done
+export const todayCompletedWash = async (req, res) => {
+  try {
+    const todayCompletedWash = await WashHistory.find({
+      createdAt: {
+        $gte: new Date(new Date().setDate(new Date().getDate())),
+        $lt: new Date(),
+      },
+      status: "Done",
+    }).populate("user", "name email");
+
+    const totalWash = todayCompletedWash.length;
+
+    res.status(200).send({
+      success: true,
+      message: "Current wash fetched successfully",
+      totalWash,
+      todayCompletedWash,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
