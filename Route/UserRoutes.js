@@ -4,6 +4,7 @@ import {
   GetUserProfileController,
   LoginController,
   RegisterController,
+  totalUserCount,
   UpdateUserController,
 } from "../controller/UserController.js";
 import { authMiddleware, isAdmin } from "../middlewares/authMiddleware.js";
@@ -30,5 +31,8 @@ router.get(
   GetAllUsersController
 );
 router.put("/update-user/:id", authMiddleware, isAdmin, UpdateUserController);
+
+// get total user
+router.get("/total-user", authMiddleware, isAdmin, totalUserCount);
 
 export default router;
