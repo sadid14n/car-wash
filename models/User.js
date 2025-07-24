@@ -20,6 +20,24 @@ const userSchema = mongoose.Schema(
       default: false,
     },
 
+    vehicals: [
+      {
+        vehicle_type: {
+          type: String,
+          required: true,
+        },
+        vehicle_name: {
+          type: String,
+          required: true,
+        },
+        vehicle_number: {
+          type: String,
+          required: true,
+          // match: /^[A-Z]{2}-\d{2}-[A-Z]{1,2}-\d{4}$/, // Validates like AS-25-F-7867
+        },
+      },
+    ],
+
     account_info: {
       total_wash: {
         type: Number,
