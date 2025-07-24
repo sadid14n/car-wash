@@ -4,6 +4,9 @@ import {
   getAllWashHistoryController,
   getUserWashHistoryController,
   getWashHistoryByIdController,
+  getWashHistoryForMonth,
+  todayCompletedWash,
+  todayCurrentWash,
 } from "../controller/WashHistoryController.js";
 import { authMiddleware, isAdmin } from "../middlewares/authMiddleware.js";
 
@@ -17,6 +20,21 @@ router.get("/all", authMiddleware, isAdmin, getAllWashHistoryController);
 
 // Get wash history for a specific user
 router.get("/user/:userId", authMiddleware, getUserWashHistoryController);
+
+// Admin Dashboard
+// Get wash history for the month
+router.get("/get-for-month", authMiddleware, isAdmin, getWashHistoryForMonth);
+
+// Current wash for today which is pending
+router.get("/today-current-wash", authMiddleware, isAdmin, todayCurrentWash);
+
+// Today completed wash which is Done
+router.get(
+  "/today-completed-wash",
+  authMiddleware,
+  isAdmin,
+  todayCompletedWash
+);
 
 // Get a single wash history record
 router.get("/:id", authMiddleware, getWashHistoryByIdController);
