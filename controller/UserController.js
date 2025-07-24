@@ -191,3 +191,36 @@ export const totalUserCount = async (req, res) => {
     });
   }
 };
+
+// added vehical in user profile
+export const addVehicalController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { vehicals } = req.body;
+
+    const user = await User.findByIdAndUpdate(
+      id,
+      { vehicals },
+      { new: true }
+    ).select("-password");
+
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    res.status(200).send({
+      success: true,
+      message: "Vehical added successfully",
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};

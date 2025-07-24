@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  addVehicalController,
   GetAllUsersController,
   GetUserProfileController,
   LoginController,
@@ -34,5 +35,8 @@ router.put("/update-user/:id", authMiddleware, isAdmin, UpdateUserController);
 
 // get total user
 router.get("/total-user", authMiddleware, isAdmin, totalUserCount);
+
+// added vehical
+router.post("/add-vehical/:id", authMiddleware, isAdmin, addVehicalController);
 
 export default router;
