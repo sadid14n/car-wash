@@ -173,3 +173,21 @@ export const GetUserProfileController = async (req, res) => {
     });
   }
 };
+
+// Get total User
+export const totalUserCount = async (req, res) => {
+  try {
+    const totalUser = await User.countDocuments();
+    res.status(200).send({
+      success: true,
+      message: "Total user fetched successfully",
+      totalUser,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
