@@ -47,6 +47,9 @@ router.get("/todays-total-sale", authMiddleware, isAdmin, todaysTotalSale);
 // Weekly total sales
 router.get("/weekly-total-sale", authMiddleware, isAdmin, weeklyTotalSale);
 
+// Monthly total sales
+router.get("/monthly-total-sale", authMiddleware, isAdmin, monthlyTotalSale);
+
 // ********** Sales ********** //
 
 // Get a single wash history record

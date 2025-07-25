@@ -301,3 +301,36 @@ export const weeklyTotalSale = async (req, res) => {
     });
   }
 };
+
+// Monthly Total Sale
+export const monthlyTotalSale = async (req, res) => {
+  try {
+    const monthlySales = await WashHistory.find({
+      createdAt: {
+        $gte: new Date(new Date().setDate(new Date().getDate() - 30)),
+        $lt: new Date(),
+      },
+      status: "Done",
+    });
+
+    const totalSales = monthlySales.length;
+    const totalAmount = monthlySales.reduce(
+      (acc, sale) => acc + sale.amount,
+      0
+    );
+
+    res.status(200).send({
+      success: true,
+      message: "Monthly total sale fetched successfully",
+      totalSales,
+      totalAmount,
+      monthlySales,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
