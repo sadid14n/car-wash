@@ -243,3 +243,94 @@ export const todayCompletedWash = async (req, res) => {
     });
   }
 };
+
+// Todays Total Sale
+export const todaysTotalSale = async (req, res) => {
+  try {
+    const todaysSales = await WashHistory.find({
+      createdAt: {
+        $gte: new Date(new Date().setDate(new Date().getDate())),
+        $lt: new Date(),
+      },
+      status: "Done",
+    });
+    const totalSales = todaysSales.length;
+    const totalAmount = todaysSales.reduce((acc, sale) => acc + sale.amount, 0);
+
+    res.status(200).send({
+      success: true,
+      message: "Todays total sale fetched successfully",
+      totalSales,
+      totalAmount,
+      todaysSales,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Weekly Total Sale
+export const weeklyTotalSale = async (req, res) => {
+  try {
+    const weeklySales = await WashHistory.find({
+      createdAt: {
+        $gte: new Date(new Date().setDate(new Date().getDate() - 7)),
+        $lt: new Date(),
+      },
+      status: "Done",
+    });
+    const totalSales = weeklySales.length;
+    const totalAmount = weeklySales.reduce((acc, sale) => acc + sale.amount, 0);
+
+    res.status(200).send({
+      success: true,
+      message: "Weekly total sale fetched successfully",
+      totalSales,
+      totalAmount,
+      weeklySales,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Monthly Total Sale
+export const monthlyTotalSale = async (req, res) => {
+  try {
+    const monthlySales = await WashHistory.find({
+      createdAt: {
+        $gte: new Date(new Date().setDate(new Date().getDate() - 30)),
+        $lt: new Date(),
+      },
+      status: "Done",
+    });
+
+    const totalSales = monthlySales.length;
+    const totalAmount = monthlySales.reduce(
+      (acc, sale) => acc + sale.amount,
+      0
+    );
+
+    res.status(200).send({
+      success: true,
+      message: "Monthly total sale fetched successfully",
+      totalSales,
+      totalAmount,
+      monthlySales,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};

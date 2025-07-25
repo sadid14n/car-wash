@@ -5,8 +5,11 @@ import {
   getUserWashHistoryController,
   getWashHistoryByIdController,
   getWashHistoryForMonth,
+  monthlyTotalSale,
   todayCompletedWash,
   todayCurrentWash,
+  todaysTotalSale,
+  weeklyTotalSale,
 } from "../controller/WashHistoryController.js";
 import { authMiddleware, isAdmin } from "../middlewares/authMiddleware.js";
 
@@ -35,6 +38,13 @@ router.get(
   isAdmin,
   todayCompletedWash
 );
+
+// ********** Sales ********** //
+
+// Today total sales
+router.get("/todays-total-sale", authMiddleware, isAdmin, todaysTotalSale);
+
+// ********** Sales ********** //
 
 // Get a single wash history record
 router.get("/:id", authMiddleware, getWashHistoryByIdController);

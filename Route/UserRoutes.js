@@ -25,6 +25,7 @@ router.get("/admin-auth", authMiddleware, isAdmin, (req, res) => {
 router.post("/register", RegisterController);
 router.post("/login", LoginController);
 router.get("/profile", authMiddleware, GetUserProfileController);
+
 router.get(
   "/get-all-user-data",
   authMiddleware,
