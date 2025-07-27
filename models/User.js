@@ -14,13 +14,17 @@ const userSchema = mongoose.Schema(
       lowercase: true,
       unique: true,
     },
+    phone: {
+      type: String,
+    },
     password: String,
+    address: String,
     isAdmin: {
       type: Boolean,
       default: false,
     },
 
-    vehicals: [
+    vehicle: [
       {
         vehicle_type: {
           type: String,
