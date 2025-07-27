@@ -1,6 +1,7 @@
 import express from "express";
 import {
   addVehicalController,
+  editVehicleController,
   GetAllUsersController,
   GetUserProfileController,
   LoginController,
@@ -35,9 +36,12 @@ router.get(
 router.put("/update-user/:id", authMiddleware, isAdmin, UpdateUserController);
 
 // get total user
-router.get("/total-user", authMiddleware, isAdmin, totalUserCount);
+router.get("/total-user-count", authMiddleware, isAdmin, totalUserCount);
 
 // added vehical
-router.post("/add-vehical/:id", authMiddleware, isAdmin, addVehicalController);
+router.post("/add-vehicle", authMiddleware, isAdmin, addVehicalController);
+
+// edit vehicle
+router.put("/edit-vehicle", authMiddleware, isAdmin, editVehicleController);
 
 export default router;

@@ -5,7 +5,7 @@ import User from "../models/User.js";
 
 export const RegisterController = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, phone, email, password } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).send({
@@ -25,7 +25,7 @@ export const RegisterController = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = new User({ name, email, password: hashedPassword });
+    const user = new User({ name, email, phone, password: hashedPassword });
     await user.save();
 
     res.status(201).send({
@@ -195,12 +195,12 @@ export const totalUserCount = async (req, res) => {
 // added vehical in user profile
 export const addVehicalController = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { vehicals } = req.body;
+    const { id } = req.body;
+    const { vehicle } = req.body;
 
     const user = await User.findByIdAndUpdate(
       id,
-      { vehicals },
+      { $push: { vehicle } },
       { new: true }
     ).select("-password");
 
@@ -219,6 +219,57 @@ export const addVehicalController = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// edit vehicle
+export const editVehicleController = async (req, res) => {
+  try {
+    const { userId, index, updatedVehicle } = req.body;
+
+    // Validate index
+    if (typeof index !== "number" || index < 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid vehicle index",
+      });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (!user.vehicle || user.vehicle.length <= index) {
+      return res.status(404).json({
+        success: false,
+        message: "Vehicle not found at specified index",
+      });
+    }
+
+    // Update the specific vehicle
+    user.vehicle[index] = {
+      ...user.vehicle[index],
+      ...updatedVehicle,
+    };
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Vehicle updated successfully",
+      user: user.toObject({ getters: true, versionKey: false }),
+    });
+  } catch (error) {
+    console.error("Edit Vehicle Error:", error);
+    res.status(500).json({
       success: false,
       message: error.message,
     });
