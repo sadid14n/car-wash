@@ -6,9 +6,10 @@ import {
   getWashHistoryByIdController,
   getWashHistoryForMonth,
   monthlyTotalSale,
-  todayCompletedWash,
-  todayCurrentWash,
+  todaysCompletedWash,
+  todaysCurrentWash,
   todaysTotalSale,
+  updateWashHistoryController,
   weeklyTotalSale,
 } from "../controller/WashHistoryController.js";
 import { authMiddleware, isAdmin } from "../middlewares/authMiddleware.js";
@@ -26,17 +27,29 @@ router.get("/user/:userId", authMiddleware, getUserWashHistoryController);
 
 // Admin Dashboard
 // Get wash history for the month
-router.get("/get-for-month", authMiddleware, isAdmin, getWashHistoryForMonth);
+router.get(
+  "/monthly-total-wash",
+  authMiddleware,
+  isAdmin,
+  getWashHistoryForMonth
+);
 
 // Current wash for today which is pending
-router.get("/today-current-wash", authMiddleware, isAdmin, todayCurrentWash);
+router.get("/todays-current-wash", authMiddleware, isAdmin, todaysCurrentWash);
 
 // Today completed wash which is Done
 router.get(
-  "/today-completed-wash",
+  "/todays-completed-wash",
   authMiddleware,
   isAdmin,
-  todayCompletedWash
+  todaysCompletedWash
+);
+
+router.put(
+  "/update-wash",
+  authMiddleware,
+  isAdmin,
+  updateWashHistoryController
 );
 
 // ********** Sales ********** //

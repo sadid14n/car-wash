@@ -51,7 +51,7 @@ export const createWashHistoryController = async (req, res) => {
       paymentMethod: paymentMethod || "Cash",
       amount,
       notes: notes || "",
-      status: "Completed",
+      status: "Active",
       isFreeWash: isFreePerkWash,
     });
 
@@ -163,6 +163,40 @@ export const getWashHistoryByIdController = async (req, res) => {
   }
 };
 
+// Update wash history record (for admin)
+export const updateWashHistoryController = async (req, res) => {
+  try {
+    const { id, status } = req.body;
+
+    const washHistory = await WashHistory.findByIdAndUpdate(
+      id,
+      { status },
+      {
+        new: true,
+      }
+    ).populate("user", "name email");
+
+    if (!washHistory) {
+      return res.status(404).send({
+        success: false,
+        message: "Wash history not found",
+      });
+    }
+
+    res.status(200).send({
+      success: true,
+      message: "Wash history updated successfully",
+      washHistory,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Failed to update wash history",
+    });
+  }
+};
+
 // Get Wash History for month which is completed
 export const getWashHistoryForMonth = async (req, res) => {
   try {
@@ -188,24 +222,29 @@ export const getWashHistoryForMonth = async (req, res) => {
   }
 };
 
+const startOfToday = new Date();
+startOfToday.setHours(0, 0, 0, 0);
+
+const now = new Date();
+
 // Today current wash which is active
-export const todayCurrentWash = async (req, res) => {
+export const todaysCurrentWash = async (req, res) => {
   try {
-    const todayCurrentWash = await WashHistory.find({
+    const todaysCurrentWash = await WashHistory.find({
       createdAt: {
-        $gte: new Date(new Date().setDate(new Date().getDate())),
-        $lt: new Date(),
+        $gte: startOfToday,
+        $lt: now,
       },
       status: "Active",
     }).populate("user", "name email");
 
-    const totalWash = todayCurrentWash.length;
+    const totalWash = todaysCurrentWash.length;
 
     res.status(200).send({
       success: true,
       message: "Current wash fetched successfully",
       totalWash,
-      todayCurrentWash,
+      todaysCurrentWash,
     });
   } catch (error) {
     console.log(error);
@@ -217,23 +256,23 @@ export const todayCurrentWash = async (req, res) => {
 };
 
 // Today completed wash which is Done
-export const todayCompletedWash = async (req, res) => {
+export const todaysCompletedWash = async (req, res) => {
   try {
-    const todayCompletedWash = await WashHistory.find({
+    const todaysCompletedWash = await WashHistory.find({
       createdAt: {
-        $gte: new Date(new Date().setDate(new Date().getDate())),
-        $lt: new Date(),
+        $gt: startOfToday,
+        $lt: now,
       },
       status: "Done",
     }).populate("user", "name email");
 
-    const totalWash = todayCompletedWash.length;
+    const totalWash = todaysCompletedWash.length;
 
     res.status(200).send({
       success: true,
       message: "Current wash fetched successfully",
       totalWash,
-      todayCompletedWash,
+      todaysCompletedWash,
     });
   } catch (error) {
     console.log(error);
@@ -249,8 +288,8 @@ export const todaysTotalSale = async (req, res) => {
   try {
     const todaysSales = await WashHistory.find({
       createdAt: {
-        $gte: new Date(new Date().setDate(new Date().getDate())),
-        $lt: new Date(),
+        $gte: startOfToday,
+        $lt: now,
       },
       status: "Done",
     });
