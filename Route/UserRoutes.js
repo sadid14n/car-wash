@@ -7,7 +7,7 @@ import {
   LoginController,
   RegisterController,
   totalUserCount,
-  UpdateUserController,
+  updateUserInfoController,
 } from "../controller/UserController.js";
 import { authMiddleware, isAdmin } from "../middlewares/authMiddleware.js";
 
@@ -33,7 +33,7 @@ router.get(
   isAdmin,
   GetAllUsersController
 );
-router.put("/update-user/:id", authMiddleware, isAdmin, UpdateUserController);
+// router.put("/update-user/:id", authMiddleware, isAdmin, UpdateUserController);
 
 // get total user
 router.get("/total-user-count", authMiddleware, isAdmin, totalUserCount);
@@ -43,5 +43,13 @@ router.post("/add-vehicle", authMiddleware, isAdmin, addVehicalController);
 
 // edit vehicle
 router.put("/edit-vehicle", authMiddleware, isAdmin, editVehicleController);
+
+// update user details controller
+router.put(
+  "/update-profile",
+  authMiddleware,
+  isAdmin,
+  updateUserInfoController
+);
 
 export default router;

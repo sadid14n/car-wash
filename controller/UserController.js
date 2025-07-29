@@ -114,37 +114,37 @@ export const GetAllUsersController = async (req, res) => {
   }
 };
 
-export const UpdateUserController = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { account_info } = req.body;
+// export const UpdateUserController = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { account_info } = req.body;
 
-    const user = await User.findByIdAndUpdate(
-      id,
-      { account_info },
-      { new: true }
-    ).select("-password");
+//     const user = await User.findByIdAndUpdate(
+//       id,
+//       { account_info },
+//       { new: true }
+//     ).select("-password");
 
-    if (!user) {
-      return res.status(404).send({
-        success: false,
-        message: "User not found",
-      });
-    }
+//     if (!user) {
+//       return res.status(404).send({
+//         success: false,
+//         message: "User not found",
+//       });
+//     }
 
-    res.status(200).send({
-      success: true,
-      message: "User updated successfully",
-      user,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      success: false,
-      message: error.message,
-    });
-  }
-};
+//     res.status(200).send({
+//       success: true,
+//       message: "User updated successfully",
+//       user,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
 
 export const GetUserProfileController = async (req, res) => {
   try {
@@ -272,6 +272,48 @@ export const editVehicleController = async (req, res) => {
     res.status(500).json({
       success: false,
       message: error.message,
+    });
+  }
+};
+
+// update user details controller
+export const updateUserInfoController = async (req, res) => {
+  try {
+    const { userId, name, phone, address } = req.body;
+
+    // Check if user exists
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Update the fields
+    if (name) user.name = name.toLowerCase();
+    if (phone) user.phone = phone;
+    if (address) user.address = address;
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "User profile updated successfully",
+      user: {
+        name: user.name,
+        phone: user.phone,
+        address: user.address,
+        email: user.email,
+        _id: user._id,
+      },
+    });
+  } catch (error) {
+    console.error("User update error:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
     });
   }
 };
