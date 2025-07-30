@@ -9,7 +9,7 @@ import {
   todaysCompletedWash,
   todaysCurrentWash,
   todaysTotalSale,
-  updateWashHistoryController,
+  updateWashStatus,
   weeklyTotalSale,
 } from "../controller/WashHistoryController.js";
 import { authMiddleware, isAdmin } from "../middlewares/authMiddleware.js";
@@ -45,13 +45,6 @@ router.get(
   todaysCompletedWash
 );
 
-router.put(
-  "/update-wash",
-  authMiddleware,
-  isAdmin,
-  updateWashHistoryController
-);
-
 // ********** Sales ********** //
 
 // Today total sales
@@ -64,6 +57,8 @@ router.get("/weekly-total-sale", authMiddleware, isAdmin, weeklyTotalSale);
 router.get("/monthly-total-sale", authMiddleware, isAdmin, monthlyTotalSale);
 
 // ********** Sales ********** //
+// update wash status route
+router.put("/update-status/:id", authMiddleware, updateWashStatus);
 
 // Get a single wash history record
 router.get("/:id", authMiddleware, getWashHistoryByIdController);

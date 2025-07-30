@@ -164,36 +164,30 @@ export const getWashHistoryByIdController = async (req, res) => {
 };
 
 // Update wash history record (for admin)
-export const updateWashHistoryController = async (req, res) => {
+export const updateWashStatus = async (req, res) => {
   try {
-    const { id, status } = req.body;
+    const washId = req.params.id;
+    const { status } = req.body;
 
-    const washHistory = await WashHistory.findByIdAndUpdate(
-      id,
+    const updated = await WashHistory.findByIdAndUpdate(
+      washId,
       { status },
-      {
-        new: true,
-      }
-    ).populate("user", "name email");
+      { new: true }
+    );
 
-    if (!washHistory) {
-      return res.status(404).send({
-        success: false,
-        message: "Wash history not found",
-      });
+    if (!updated) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Wash not found" });
     }
 
-    res.status(200).send({
+    res.status(200).json({
       success: true,
-      message: "Wash history updated successfully",
-      washHistory,
+      message: "Status updated successfully",
+      wash: updated,
     });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      success: false,
-      message: "Failed to update wash history",
-    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -222,18 +216,20 @@ export const getWashHistoryForMonth = async (req, res) => {
   }
 };
 
-const startOfToday = new Date();
-startOfToday.setHours(0, 0, 0, 0);
-
 const now = new Date();
+const startOfTodayUTC = new Date(
+  Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+);
+const endOfTodayUTC = new Date(startOfTodayUTC);
+endOfTodayUTC.setUTCHours(23, 59, 59, 999);
 
 // Today current wash which is active
 export const todaysCurrentWash = async (req, res) => {
   try {
     const todaysCurrentWash = await WashHistory.find({
       createdAt: {
-        $gte: startOfToday,
-        $lt: now,
+        $gte: startOfTodayUTC,
+        $lte: endOfTodayUTC,
       },
       status: "Active",
     }).populate("user", "name email");
@@ -260,8 +256,8 @@ export const todaysCompletedWash = async (req, res) => {
   try {
     const todaysCompletedWash = await WashHistory.find({
       createdAt: {
-        $gt: startOfToday,
-        $lt: now,
+        $gte: startOfTodayUTC,
+        $lte: endOfTodayUTC,
       },
       status: "Done",
     }).populate("user", "name email");
@@ -288,8 +284,8 @@ export const todaysTotalSale = async (req, res) => {
   try {
     const todaysSales = await WashHistory.find({
       createdAt: {
-        $gte: startOfToday,
-        $lt: now,
+        $gte: startOfTodayUTC,
+        $lte: endOfTodayUTC,
       },
       status: "Done",
     });
