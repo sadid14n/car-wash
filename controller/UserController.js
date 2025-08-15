@@ -7,12 +7,12 @@ export const RegisterController = async (req, res) => {
   try {
     const { name, email, phone, password } = req.body;
 
-    // if (!name || !password) {
-    //   return res.status(400).send({
-    //     success: false,
-    //     message: "Please fill all fields",
-    //   });
-    // }
+    if (!name || !password) {
+      return res.status(400).send({
+        success: false,
+        message: "Please fill all fields",
+      });
+    }
 
     // Check if user already exists (by email or phone)
     let existingUser;
@@ -57,14 +57,19 @@ export const LoginController = async (req, res) => {
   try {
     const { email, password, phone } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).send({
-        success: false,
-        message: "Please fill all fields",
-      });
-    }
+    // if (!email || !password) {
+    //   return res.status(400).send({
+    //     success: false,
+    //     message: "Please fill all fields",
+    //   });
+    // }
 
-    const user = await User.findOne({ email });
+    let user;
+    if (email) {
+      user = await User.findOne({ email });
+    } else {
+      user = await User.findOne({ phone });
+    }
 
     if (!user) {
       return res.status(400).send({
