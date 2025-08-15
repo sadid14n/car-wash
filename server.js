@@ -20,7 +20,7 @@ app.use(express.json());
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
-  "https://car-wash-frontend-zmgc.vercel.app/",
+  "https://car-wash-frontend-zmgc.vercel.app",
 ];
 
 app.use(
