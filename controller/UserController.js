@@ -5,16 +5,22 @@ import User from "../models/User.js";
 
 export const RegisterController = async (req, res) => {
   try {
-    const { name, phone, email, password } = req.body;
+    const { name, email, phone, password } = req.body;
 
-    if (!name || !email || !password) {
-      return res.status(400).send({
-        success: false,
-        message: "Please fill all fields",
-      });
+    // if (!name || !password) {
+    //   return res.status(400).send({
+    //     success: false,
+    //     message: "Please fill all fields",
+    //   });
+    // }
+
+    // Check if user already exists (by email or phone)
+    let existingUser;
+    if (email) {
+      existingUser = await User.findOne({ email });
+    } else {
+      existingUser = await User.findOne({ phone });
     }
-
-    const existingUser = await User.findOne({ email });
 
     if (existingUser) {
       return res.status(400).send({
@@ -25,7 +31,12 @@ export const RegisterController = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = new User({ name, email, phone, password: hashedPassword });
+    const user = new User({
+      name,
+      email: email || null,
+      phone: phone || null,
+      password: hashedPassword,
+    });
     await user.save();
 
     res.status(201).send({
@@ -44,7 +55,7 @@ export const RegisterController = async (req, res) => {
 
 export const LoginController = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, phone } = req.body;
 
     if (!email || !password) {
       return res.status(400).send({
