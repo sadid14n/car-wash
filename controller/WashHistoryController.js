@@ -232,7 +232,7 @@ export const todaysCurrentWash = async (req, res) => {
         $lte: endOfTodayUTC,
       },
       status: "Active",
-    }).populate("user", "name email");
+    }).populate("user", "name phone");
 
     const totalWash = todaysCurrentWash.length;
 
@@ -260,7 +260,7 @@ export const todaysCompletedWash = async (req, res) => {
         $lte: endOfTodayUTC,
       },
       status: "Done",
-    }).populate("user", "name email");
+    }).populate("user", "name phone");
 
     const totalWash = todaysCompletedWash.length;
 
