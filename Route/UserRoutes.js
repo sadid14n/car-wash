@@ -2,6 +2,7 @@ import express from "express";
 import {
   addVehicalController,
   deleteUserController,
+  deleteVehicleController,
   editVehicleController,
   GetAllUsersController,
   getSingleUser,
@@ -54,6 +55,9 @@ router.delete(
   isAdmin,
   deleteUserController
 );
+
+// delete vehicle
+router.delete("/users/:userId/vehicles/:vehicleId", deleteVehicleController);
 
 // update user details controller
 router.put(

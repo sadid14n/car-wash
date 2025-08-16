@@ -241,6 +241,39 @@ export const deleteUserController = async (req, res) => {
   }
 };
 
+// Delete a vehicle from a user
+export const deleteVehicleController = async (req, res) => {
+  try {
+    const { userId, vehicleId } = req.params;
+
+    // Remove the vehicle with matching _id from user's vehicle array
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { vehicle: { _id: vehicleId } } }, // $pull removes matching object from array
+      { new: true } // return updated user
+    );
+
+    if (!updatedUser) {
+      return res.status(404).send({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    res.status(200).send({
+      success: true,
+      message: "Vehicle deleted successfully",
+      data: updatedUser,
+    });
+  } catch (error) {
+    console.error("Error deleting vehicle:", error);
+    res.status(500).send({
+      success: false,
+      message: "Error in deleting vehicle",
+    });
+  }
+};
+
 // Get total User
 export const totalUserCount = async (req, res) => {
   try {
