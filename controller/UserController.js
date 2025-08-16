@@ -190,6 +190,57 @@ export const GetUserProfileController = async (req, res) => {
   }
 };
 
+export const getSingleUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findById(id).select("-password");
+
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    res.status(200).send({
+      success: true,
+      message: "User profile fetched successfully",
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ success: false, message: "Error in fetching user" });
+  }
+};
+
+export const deleteUserController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedUser = await User.findByIdAndDelete(id);
+
+    if (!deletedUser) {
+      return res.status(404).send({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    res.status(200).send({
+      success: true,
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    console.error("Delete User Error:", error);
+    res.status(500).send({
+      success: false,
+      message: "Error in deleting user controller",
+      error: error.message, // helpful for debugging
+    });
+  }
+};
+
 // Get total User
 export const totalUserCount = async (req, res) => {
   try {

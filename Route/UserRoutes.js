@@ -1,8 +1,10 @@
 import express from "express";
 import {
   addVehicalController,
+  deleteUserController,
   editVehicleController,
   GetAllUsersController,
+  getSingleUser,
   GetUserProfileController,
   LoginController,
   RegisterController,
@@ -43,6 +45,15 @@ router.post("/add-vehicle", authMiddleware, isAdmin, addVehicalController);
 
 // edit vehicle
 router.put("/edit-vehicle", authMiddleware, isAdmin, editVehicleController);
+
+router.get("/get-single-user/:id", authMiddleware, isAdmin, getSingleUser);
+
+router.delete(
+  "/delete-user/:id",
+  authMiddleware,
+  isAdmin,
+  deleteUserController
+);
 
 // update user details controller
 router.put(
