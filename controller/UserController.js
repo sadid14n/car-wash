@@ -218,6 +218,15 @@ export const deleteUserController = async (req, res) => {
   try {
     const { id } = req.params;
 
+    const isAdmin = await User.findById(id);
+
+    if (isAdmin.isAdmin) {
+      return res.status(400).send({
+        success: false,
+        message: "Cannot delete admin",
+      });
+    }
+
     const deletedUser = await User.findByIdAndDelete(id);
 
     if (!deletedUser) {
